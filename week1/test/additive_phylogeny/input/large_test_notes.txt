@@ -1,0 +1,5 @@
+3 - size 29 - error
+7 - size 18 - error
+8 - size 10 - no error
+9 - size 9 - middle-rows-trunctaed - no error
+10 - size 15 - some near-end-rows removed but not last-3 - error
