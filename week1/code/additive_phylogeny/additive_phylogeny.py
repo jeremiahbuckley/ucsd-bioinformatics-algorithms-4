@@ -32,7 +32,7 @@ def organize_inputs(input_file):
         print_graph(graph)
         print()
 
-    return graph, graph_size
+    return graph
 
 def confirm_graph_consistency(graph, graph_name):
     for i in range(len(graph)):
@@ -54,12 +54,11 @@ def print_tree(tree, tab_count=0):
 
 def calc_limb_length(graph, node_id):
     length = sys.maxsize
-    graph_size = len(graph)
     if _debug_:
         print("node_id = {0}".format(node_id))
         print_graph(graph)
-    for i in range(graph_size-1):
-        for j in range(i+1, graph_size):
+    for i in range(len(graph)-1):
+        for j in range(i+1, len(graph)):
             if i != node_id and j != node_id:
                 cur_val = int((graph[node_id][i] + graph[node_id][j] - graph[i][j]) / 2)
 # 280
@@ -419,10 +418,10 @@ if __name__ == '__main__':
                 _timed_output_ = True
                 _debug_ = True
     
-    graph, graph_size = organize_inputs(sys.argv[1])
+    graph = organize_inputs(sys.argv[1])
 
-    if graph_size < 1:
-        raise ValueError("output_size incorrect value {0}".format(str(graph_size)))
+    if len(graph) < 1:
+        raise ValueError("output_size incorrect value {0}".format(str(len(graph))))
 
 
     results = build_tree_from_graph(graph)

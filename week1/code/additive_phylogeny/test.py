@@ -6,7 +6,7 @@ import additive_phylogeny
 
 def init_test_from_file(path):
 
-    graph, graph_size = additive_phylogeny.organize_inputs(path)
+    graph = additive_phylogeny.organize_inputs(path)
 
     return additive_phylogeny.build_tree_from_graph(graph)
 
