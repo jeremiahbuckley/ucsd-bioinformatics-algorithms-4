@@ -16,7 +16,6 @@ def organize_inputs(input_file):
 
         idx = 0
         graph = []
-        node_ids = []
         while line:
             cleanline = line.rstrip()
             if len(cleanline) > 0:
@@ -26,16 +25,14 @@ def organize_inputs(input_file):
                     graph.append([int(n) for n in cleanline.split()])
 
                 idx += 1
-                node_ids.append(idx-1)
             line = f.readline()
 
     if _debug_:
         print(graph_size)
-        print(node_ids)
         print_graph(graph)
         print()
 
-    return graph, node_ids, graph_size
+    return graph, graph_size
 
 def confirm_graph_consistency(graph, graph_name):
     for i in range(len(graph)):
@@ -102,7 +99,7 @@ def build_full_graph_from_graph_and_limb_lengths(graph, limb_lengths):
 
     return full_graph, full_graph_limb_lengths
 
-def build_tree_from_graph(graph, node_ids):
+def build_tree_from_graph(graph):
     confirm_graph_consistency(graph, "graph")
     limb_lengths = []
     for g in range(len(graph)):
@@ -114,7 +111,7 @@ def build_tree_from_graph(graph, node_ids):
     graph_to_tree_idx = []
     for i in range(len(full_graph)):
         graph_to_tree_idx.append(i)
-    tree = build_tree_from_graph_and_limb_lengths(full_graph, full_graph_limb_lengths, node_ids, graph_to_tree_idx, 0)
+    tree = build_tree_from_graph_and_limb_lengths(full_graph, full_graph_limb_lengths, graph_to_tree_idx, 0)
 
     new_tree = []
     for n in tree:
@@ -238,7 +235,7 @@ def find_root_point_between_anchors(tree, anchor_1, anchor_2, distance_from_anch
     return False, tree, -1, -1
 
         
-def build_tree_from_graph_and_limb_lengths(full_graph, full_graph_limb_lengths, node_ids, graph_idx_to_tree_node, tab_count = 0):
+def build_tree_from_graph_and_limb_lengths(full_graph, full_graph_limb_lengths, graph_idx_to_tree_node, tab_count = 0):
     if len(full_graph) < 2:
         raise ValueError("graph size {0} < 2".format(str(len(full_graph))))
 
@@ -279,7 +276,7 @@ def build_tree_from_graph_and_limb_lengths(full_graph, full_graph_limb_lengths, 
         if i != len(full_graph) - 2:
             full_graph_without_last_column_and_row.append(row_without_last_column)
 
-    new_tree = build_tree_from_graph_and_limb_lengths(full_graph_without_last_column_and_row, full_graph_limb_lengths, node_ids[0:len(node_ids)-1], graph_idx_to_tree_node, tab_count+1)
+    new_tree = build_tree_from_graph_and_limb_lengths(full_graph_without_last_column_and_row, full_graph_limb_lengths, graph_idx_to_tree_node, tab_count+1)
 
     if (_debug_):
         print("\t" * tab_count + "finding node anchor point")
@@ -422,13 +419,13 @@ if __name__ == '__main__':
                 _timed_output_ = True
                 _debug_ = True
     
-    graph, node_ids, graph_size = organize_inputs(sys.argv[1])
+    graph, graph_size = organize_inputs(sys.argv[1])
 
     if graph_size < 1:
         raise ValueError("output_size incorrect value {0}".format(str(graph_size)))
 
 
-    results = build_tree_from_graph(graph, node_ids)
+    results = build_tree_from_graph(graph)
 
     for r in results:
         print(format_tree_node_output(r))
