@@ -34,9 +34,18 @@ def organize_inputs(input_file):
     return edges, target_edge_nodes
 
 def print_edges(edges):
+    ps = print_edges_strings(edges)
+
+    for s in ps:
+        print(s)
+
+def print_edges_strings(edges):
+    outstr = []
     for k,v in edges.items():
         for endpoint in v:
-            print("{0}->{1}".format(k, endpoint))
+            outstr.append("{0}->{1}".format(k, endpoint))
+    
+    return outstr
 
 def swap_edges(edges, target_edge_nodes):
 
@@ -65,10 +74,12 @@ def swap_edges(edges, target_edge_nodes):
     second_swap = []
     ec = edges[target_edge_nodes[0]]
     for c in ec:
-        if c != target_edge_nodes[1]:
+        if c not in target_edge_nodes:
+            first_swap = []
+            second_swap = []
             first_swap.append(c)
             second_swap.append(c)
-            break
+            # break
 
     if _debug_:
         print("first_swap, second_swap")
@@ -79,7 +90,7 @@ def swap_edges(edges, target_edge_nodes):
     ec = edges[target_edge_nodes[1]]
     found_first_swap = False
     for c in ec:
-        if c != target_edge_nodes[0]:
+        if c not in target_edge_nodes:
             if not found_first_swap:
                 first_swap.append(c)
                 found_first_swap = True
